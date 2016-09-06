@@ -1,6 +1,7 @@
 from flask import Flask, redirect, url_for, session, request, jsonify
 from flask_oauthlib.client import OAuth, OAuthException
 from logging import Logger
+import uuid
 
 app = Flask(__name__)
 app.debug = True
@@ -29,7 +30,12 @@ def index():
 
 @app.route('/login')
 def login():
-	response = microsoft.authorize(callback=url_for('authorized', _external=True))
+
+	# Generate the guid for session state to prevent CSRF
+	guid = uuid.uuid4()
+	session['state'] = guid
+
+	response = microsoft.authorize(callback=url_for('authorized', _external=True), state=guid)
 
 	# before returning 302 response to l.mso.com
 		# Save state in cookies
@@ -40,15 +46,12 @@ def login():
 @app.route('/logout')
 def logout():
 	session.pop('microsoft_token', None)
+	session.pop('state', None)
 	return redirect(url_for('index'))
 
 @app.route('/login/authorized')
 def authorized():
-	try:
-		response = microsoft.authorized_response()
-	except OAuthException as e:
-		return "OAuthException: " + str(e.data)
-
+	response = microsoft.authorized_response()
 
 	if response is None:
 		return "Access Denied: Reason=%s\nError=%s" % (
@@ -56,10 +59,12 @@ def authorized():
 			request.args['error_description']
 		)
 
-	if isinstance(response, OAuthException):
-		return 'Access Denied: %s' % response.message
-
 	session['microsoft_token'] = (response['access_token'], '')
+
+	# Check response for state
+	if str(session['state']) != str(request.args['state']):
+		raise Exception('State has been messed with, possible CSRF attack')
+
 	return redirect(url_for('me'))
 
 @app.route('/me')
@@ -67,6 +72,11 @@ def me():
 	me = microsoft.get('me')
 	return jsonify(me.data)
 
+# This looks to go on the server side, but may implement refresh token logic
+# @app.route('/refresh', methods=['POST'])
+# @oauth.token_handler
+# def access_token():
+# 	return None
 
 @microsoft.tokengetter
 def get_microsoft_oauth_token():

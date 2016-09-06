@@ -8,4 +8,4 @@ Daniel Dobalian ([dadobali@microsoft.com](mailto:dadobali@microsoft.com))
 
 ## Steps to Run
 
-Install & setup Flask if you haven't done so.  Then run the flask app, and naviagte to localhost:5000.
+Install & setup Flask if you haven't done so.  Register a Azure AD v2 app to obtain a client id (or consumer key) and consumer secret.  Then run the flask app, and naviagte to localhost:5000.

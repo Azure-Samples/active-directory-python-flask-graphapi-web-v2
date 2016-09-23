@@ -8,7 +8,8 @@ app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
 
-
+# Put your consumer key and consumer secret into a config file
+# and don't check it into github!!
 microsoft = oauth.remote_app(
 	'microsoft',
 	consumer_key='Register your app at apps.dev.microsoft.com',
@@ -31,17 +32,11 @@ def index():
 @app.route('/login')
 def login():
 
-	# Generate the guid for session state to prevent CSRF
+	# Generate the guid to only accept initiated logins
 	guid = uuid.uuid4()
 	session['state'] = guid
 
-	response = microsoft.authorize(callback=url_for('authorized', _external=True), state=guid)
-
-	# before returning 302 response to l.mso.com
-		# Save state in cookies
-		# Append state to response
-
-	return response
+	return microsoft.authorize(callback=url_for('authorized', _external=True), state=guid)
 
 @app.route('/logout')
 def logout():
@@ -59,11 +54,13 @@ def authorized():
 			request.args['error_description']
 		)
 
-	session['microsoft_token'] = (response['access_token'], '')
-
 	# Check response for state
 	if str(session['state']) != str(request.args['state']):
-		raise Exception('State has been messed with, possible CSRF attack')
+		raise Exception('State has been messed with, end authentication')
+		
+	# Okay to store this in a local variable, encrypt if it's going to client
+	# machine or database. Treat as a password. 
+	session['microsoft_token'] = (response['access_token'], '')
 
 	return redirect(url_for('me'))
 
@@ -72,11 +69,12 @@ def me():
 	me = microsoft.get('me')
 	return jsonify(me.data)
 
-# This looks to go on the server side, but may implement refresh token logic
+# If library is having trouble with refresh, uncomment below and implement refresh handler
+# see https://github.com/lepture/flask-oauthlib/issues/160 for instructions on how to do this
+
+# Implements refresh token logic
 # @app.route('/refresh', methods=['POST'])
-# @oauth.token_handler
-# def access_token():
-# 	return None
+# def refresh():
 
 @microsoft.tokengetter
 def get_microsoft_oauth_token():

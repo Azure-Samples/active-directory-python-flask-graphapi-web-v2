@@ -1,9 +1,13 @@
-from flask import Flask, redirect, url_for, session, request, jsonify
+from flask import Flask, redirect, url_for, session, request, jsonify, render_template
 from flask_oauthlib.client import OAuth, OAuthException
+
+# from flask_sslify import SSLify
+
 from logging import Logger
 import uuid
 
 app = Flask(__name__)
+# sslify = SSLify(app)
 app.debug = True
 app.secret_key = 'development'
 oauth = OAuth(app)
@@ -25,20 +29,21 @@ microsoft = oauth.remote_app(
 
 @app.route('/')
 def index():
-	if 'microsoft_token' in session: 
-		return redirect(url_for('me'))
-	return redirect(url_for('login'))
+	return render_template('hello.html')
 
-@app.route('/login')
+@app.route('/login', methods = ['POST', 'GET'])
 def login():
+
+	if 'microsoft_token' in session:
+		return redirect(url_for('me'))
 
 	# Generate the guid to only accept initiated logins
 	guid = uuid.uuid4()
 	session['state'] = guid
 
 	return microsoft.authorize(callback=url_for('authorized', _external=True), state=guid)
-
-@app.route('/logout')
+	
+@app.route('/logout', methods = ['POST', 'GET'])
 def logout():
 	session.pop('microsoft_token', None)
 	session.pop('state', None)
@@ -50,11 +55,12 @@ def authorized():
 
 	if response is None:
 		return "Access Denied: Reason=%s\nError=%s" % (
-			request.args['error'], 
-			request.args['error_description']
+			response.get('error'), 
+			request.get('error_description')
 		)
-
+		
 	# Check response for state
+	print("Response: " + str(response))
 	if str(session['state']) != str(request.args['state']):
 		raise Exception('State has been messed with, end authentication')
 		
@@ -62,12 +68,14 @@ def authorized():
 	# machine or database. Treat as a password. 
 	session['microsoft_token'] = (response['access_token'], '')
 
-	return redirect(url_for('me'))
+	return redirect(url_for('me')) 
 
 @app.route('/me')
 def me():
 	me = microsoft.get('me')
-	return jsonify(me.data)
+	return render_template('me.html', me=str(me.data))
+
+	
 
 # If library is having trouble with refresh, uncomment below and implement refresh handler
 # see https://github.com/lepture/flask-oauthlib/issues/160 for instructions on how to do this

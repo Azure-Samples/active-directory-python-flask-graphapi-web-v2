@@ -1,25 +1,46 @@
-# v2 Flask App 
+---
+services: active-directory
+platforms: Python, Flask
+author: dadobali
+---
 
-This is a small flask app that uses the [flask-oauthlib](https://github.com/lepture/flask-oauthlib) to do oAuth2.0 against the v2 endpoint.  It displays the /me endpoint.
+# Sign in Azure AD + MSA Users using Python-Flask Open Source Libraries
 
-## Authors
+> [!NOTE]
+> This sample is using a 3rd party library that has been tested for compatibility in basic scenarios with the v2.0 endpoint.  Microsoft does not provide fixes for these libraries and has not done a review of these libraries.  Issues and feature requests should be directed to the library's open-source project.  Please see this [document](https://docs.microsoft.com/en-us/azure/active-directory/develop/active-directory-v2-libraries) for more information.   
+> 
+>
 
-Daniel Dobalian ([dadobali@microsoft.com](mailto:dadobali@microsoft.com))
+This sample demonstrates how to use Azure AD with a 3rd party Python-Flask library ([flask-oauthlib](https://github.com/lepture/flask-oauthlib)) to do oAuth2.0 against the v2.0 endpoint.  It then makes a call to the me endpoint of the Microsoft Graph to get information about the user. 
 
 ## Steps to Run
+1. Install Flask using pip if you don't already have it.  If you do, make sure to update Flask.     
+    ```
+    sudo pip install Flask
+    ```
+2. Register your Azure AD v2 app.  
+    - Navigate to the [App Registration Portal](https://identity.microsoft.com) and sign in. 
+    - Go to the the `My Apps` page, click `Add an App`, and name your app.  
+    - Set a platform by clicking `Add Platform`, select `Web`, and add a Redirect URI of ```http://localhost:5000/login/authorized```.
+    - Click "Generate New Password' and record your Consumer Secret.  
+3. In the top of v2flaskapp.py, add your Application/Client ID and Consumer Secret to the app config.
+4. Set your flask environment variable and run the sample in the terminal! Navigate to `http://localhost:5000`.
+    ```
+    $ export FLASK_APP=v2flaskapp.py
+    $ flask run
+    ```
+## Questions and Issues
 
-Install & setup Flask if you haven't done so.  
+Please file any questions or problems with the sample as a github issue.  You can also post on StackOverflow with the tag ```azure-active-directory```.  For oAuth2.0 library issues, please see note above. 
 
-Register an Azure AD v2 app to obtain a client id (or consumer key).  Click "Generate New Password', this will beyour consumer secret.  Then add Redirect URI's for all the routes in the app. 
+This sample was tested with python 2.7.10, Flask 0.11.1, and Flask-OAuthlib 0.9.3.
 
-Finally, set your flask path and run the flask app.  Naviagte to localhost:5000 and sign in.
+## Acknowledgements
 
-## References
-
-The flask & django libraries are built ontop of the oauthlib.
-
-[oauthlib](https://github.com/idan/oauthlib)
+The flask & django libraries are built ontop of the core python oauthlib.
 
 [flask-oauthlib](https://github.com/lepture/flask-oauthlib)
+
+[oauthlib](https://github.com/idan/oauthlib)
 
 [django-oauth-toolkit](https://github.com/evonove/django-oauth-toolkit)

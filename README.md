@@ -11,7 +11,7 @@ author: dadobali
 > 
 >
 
-This sample demonstrates how to use Azure AD with a 3rd party Python-Flask library ([flask-oauthlib](https://github.com/lepture/flask-oauthlib)) to do oAuth2.0 against the v2.0 endpoint.  It then makes a call to the me endpoint of the Microsoft Graph to get information about the user. 
+This sample demonstrates how to use Azure AD with a 3rd party Python-Flask library ([flask-oauthlib](https://github.com/lepture/flask-oauthlib)) to do oAuth 2.0 against the v2.0 endpoint.  It then makes a call to the me endpoint of the Microsoft Graph to get information about the user. 
 
 ## Steps to Run
 1. Install Flask using pip if you don't already have it.  If you do, make sure to update Flask.     
@@ -19,15 +19,20 @@ This sample demonstrates how to use Azure AD with a 3rd party Python-Flask libra
     sudo pip install Flask
     ```
 
-2. Register your Azure AD v2 app.  
+2. Register your Azure AD v2.0 app.  
     - Navigate to the [App Registration Portal](https://identity.microsoft.com). 
     - Go to the the `My Apps` page, click `Add an App`, and name your app.  
     - Set a platform by clicking `Add Platform`, select `Web`, and add a Redirect URI of ```http://localhost:5000/login/authorized```.
     - Click "Generate New Password' and record your Consumer Secret.  
 
-3. In the top of v2flaskapp.py, add your Application/Client ID and Consumer Secret to the app config.
+3. Clone the code. 
+    ```
+    git clone https://github.com/danieldobalian/v2flaskapp.git 
+    ```
 
-4. Set your flask environment variable and run the sample in the terminal! Navigate to `http://localhost:5000`.
+4. In the top of v2flaskapp.py, add your Application/Client ID and Consumer Secret to the app config.
+
+5. Set your flask environment variable and run the sample in the terminal! Navigate to `http://localhost:5000`.
     ```
     $ export FLASK_APP=v2flaskapp.py && flask run
     ```

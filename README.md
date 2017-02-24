@@ -25,7 +25,7 @@ This sample demonstrates how to use Azure AD with a 3rd party Python-Flask libra
     - Set a platform by clicking `Add Platform`, select `Web`, and add a Redirect URI of ```http://localhost:5000/login/authorized```.
     - Click "Generate New Password' and record your Consumer Secret.  
 
-3. In the top of v2flaskapp.py, add your Application/Client ID and Consumer Secret to the app config.
+3. At the top of v2flaskapp.py, fill in your Application/Client ID and Consumer Secret to the app config.
 
 4. Set your flask environment variable and run the sample in the terminal! Navigate to `http://localhost:5000`.
     ```
@@ -36,7 +36,7 @@ This sample demonstrates how to use Azure AD with a 3rd party Python-Flask libra
 
 Please file any questions or problems with the sample as a github issue.  You can also post on StackOverflow with the tag ```azure-active-directory```.  For oAuth2.0 library issues, please see note above. 
 
-This sample was tested with python 2.7.10, Flask 0.11.1, and Flask-OAuthlib 0.9.3.
+This sample was tested with Python 2.7.10, Flask 0.11.1, and Flask-OAuthlib 0.9.3.
 
 ## Acknowledgements
 

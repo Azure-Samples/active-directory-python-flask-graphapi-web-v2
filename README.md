@@ -27,7 +27,7 @@ This sample demonstrates how to use Azure AD with a 3rd party Python-Flask libra
 
 3. Clone the code. 
     ```
-    git clone https://github.com/danieldobalian/v2flaskapp.git 
+    git clone https://github.com/Azure-Samples/active-directory-python-flask-graphapi-web-v2
     ```
 
 4. In the top of v2flaskapp.py, add your Application/Client ID and Consumer Secret to the app config.

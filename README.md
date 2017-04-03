@@ -1,7 +1,7 @@
 ---
 services: active-directory
 platforms: Python, Flask
-author: dadobali
+author: danieldobalian
 ---
 
 # Sign in Azure AD + MSA Users using Python-Flask Open Source Libraries

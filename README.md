@@ -1,6 +1,6 @@
 ---
 services: active-directory
-platforms: Python, Flask
+platforms: python
 author: danieldobalian
 ---
 

@@ -1,9 +1,11 @@
 <html>
-    <title>Azure AD v2.0 App</title>
-    <body >
+    <head>
+        <title>Azure AD v2.0 App</title>
+    </head>
+    <body>
         <h1>Welcome to my Azure AD v2.0 Test App! </h1><br><br><br><br>
-        <form action = "http://localhost:5000/login" method = "POST">
-            <p><input type="submit" value="Login" style="width:400px"</p>
+        <form action = "{{url_for('login')}}" method = "POST">
+            <p><input type="submit" value="Login" style="width:400px"></p>
         </form>
     </body>
 </html>
